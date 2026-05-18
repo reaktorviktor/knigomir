@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if category %}{{ category.name }} — {% endif %}Каталог книг — КнигоМир
+{% endblock %}
+
+{% block content %}
+
+<div class="page-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="color:rgba(255,255,255,0.7);">
+                <li class="breadcrumb-item"><a href="{% url 'store:index' %}" style="color:rgba(255,255,255,0.7);">Главная</a></li>
+                <li class="breadcrumb-item active" style="color:#fff;">{% if category %}{{ category.name }}{% else %}Все книги{% endif %}</li>
+            </ol>
+        </nav>
+        <h1 style="font-family:'Playfair Display',serif; font-size:2.5rem; margin-bottom:0.5rem;">
+            {% if category %}{{ category.name }}{% else %}Каталог книг{% endif %}
+        </h1>
+        {% if query %}<p style="opacity:0.8;">Результаты поиска: «{{ query }}»</p>{% endif %}
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row">
+        <!-- Сайдбар -->
+        <div class="col-md-3 mb-4">
+            <div style="background:#fff; border-radius:12px; padding:1.5rem; box-shadow:var(--card-shadow);">
+                <h6 class="fw-bold mb-3 text-uppercase" style="font-size:0.8rem; letter-spacing:1px; color:#888;">Категории</h6>
+                <a href="{% url 'store:book_list' %}" class="d-block mb-2 {% if not category %}fw-bold text-dark{% else %}text-muted{% endif %}" style="text-decoration:none; font-size:0.9rem;">
+                    Все категории
+                </a>
+                {% for cat in categories %}
+                    <a href="{{ cat.get_absolute_url }}" class="d-block mb-2 {% if category.slug == cat.slug %}fw-bold text-dark{% else %}text-muted{% endif %}" style="text-decoration:none; font-size:0.9rem;">
+                        {{ cat.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Книги -->
+        <div class="col-md-9">
+            <!-- Сортировка и поиск -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <p class="text-muted mb-0" style="font-size:0.9rem;">
+                    Найдено книг: <strong>{{ page_obj.paginator.count }}</strong>
+                </p>
+                <form method="get" class="d-flex gap-2 align-items-center">
+                    {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+                    <select name="sort" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+                        <option value="-created" {% if sort == '-created' %}selected{% endif %}>Новинки</option>
+                        <option value="price" {% if sort == 'price' %}selected{% endif %}>Цена ↑</option>
+                        <option value="-price" {% if sort == '-price' %}selected{% endif %}>Цена ↓</option>
+                        <option value="title" {% if sort == 'title' %}selected{% endif %}>По названию</option>
+                        <option value="-avg_rating" {% if sort == '-avg_rating' %}selected{% endif %}>По рейтингу</option>
+                    </select>
+                </form>
+            </div>
+
+            {% if books %}
+                <div class="row g-4">
+                    {% for book in books %}
+                    <div class="col-6 col-lg-4">
+                        <div class="book-card">
+                            <a href="{{ book.get_absolute_url }}" class="text-decoration-none">
+                                <div class="book-cover-wrap">
+                                    {% if book.cover %}
+                                        <img src="{{ book.cover.url }}" alt="{{ book.title }}">
+                                    {% else %}
+                                        <div class="book-cover-placeholder">
+                                            <i class="fas fa-book"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                            <div class="card-body">
+                                <a href="{{ book.get_absolute_url }}" class="text-decoration-none text-dark">
+                                    <p class="book-title">{{ book.title }}</p>
+                                </a>
+                                <p class="book-author">
+                                    <a href="{% url 'store:author_detail' book.author.pk %}" class="text-decoration-none text-muted">
+                                        {{ book.author }}
+                                    </a>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="book-price">{{ book.price }} сом</span>
+                                    {% if book.stock > 0 %}
+                                        <a href="{% url 'store:add_to_cart' book.pk %}" class="btn btn-accent btn-sm">
+                                            <i class="fas fa-cart-plus"></i>
+                                        </a>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Нет</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Пагинация -->
+                {% if page_obj.has_other_pages %}
+                <nav class="mt-5 d-flex justify-content-center">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">Книги не найдены</h4>
+                    <p class="text-muted">Попробуйте изменить параметры поиска</p>
+                    <a href="{% url 'store:book_list' %}" class="btn btn-primary">Все книги</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

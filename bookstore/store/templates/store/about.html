@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}О нас — КнигоМир{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <div class="container">
+        <h1 style="font-family:'Playfair Display',serif; font-size:2.5rem;">О нашем магазине</h1>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-5 align-items-center mb-5">
+        <div class="col-md-6">
+            <h2 style="font-family:'Playfair Display',serif; color:var(--primary);">КнигоМир — ваш книжный мир</h2>
+            <div class="section-divider my-3"></div>
+            <p style="line-height:1.8; color:#555; margin-bottom:1rem;">
+                Мы — молодой и динамично развивающийся книжный интернет-магазин, основанный в 2020 году в Бишкеке.
+                Наша миссия — сделать книги доступными для каждого жителя Кыргызстана.
+            </p>
+            <p style="line-height:1.8; color:#555; margin-bottom:1rem;">
+                В нашем каталоге собраны тысячи книг на разных языках: художественная литература, научные издания,
+                детские книги, учебники и многое другое. Мы тщательно отбираем только оригинальные издания от
+                проверенных поставщиков.
+            </p>
+            <p style="line-height:1.8; color:#555;">
+                Быстрая доставка по всему Кыргызстану, удобная оплата и профессиональная служба поддержки —
+                это то, за что нас ценят тысячи постоянных покупателей.
+            </p>
+        </div>
+        <div class="col-md-6">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div style="background:#fff; border-radius:12px; padding:2rem; text-align:center; box-shadow:var(--card-shadow);">
+                    <div style="font-size:2.5rem; font-weight:700; color:var(--accent);">5000+</div>
+                    <p class="text-muted mb-0">Книг в каталоге</p>
+                </div>
+                <div style="background:#fff; border-radius:12px; padding:2rem; text-align:center; box-shadow:var(--card-shadow);">
+                    <div style="font-size:2.5rem; font-weight:700; color:var(--accent);">10K+</div>
+                    <p class="text-muted mb-0">Довольных покупателей</p>
+                </div>
+                <div style="background:#fff; border-radius:12px; padding:2rem; text-align:center; box-shadow:var(--card-shadow);">
+                    <div style="font-size:2.5rem; font-weight:700; color:var(--accent);">3</div>
+                    <p class="text-muted mb-0">Года на рынке</p>
+                </div>
+                <div style="background:#fff; border-radius:12px; padding:2rem; text-align:center; box-shadow:var(--card-shadow);">
+                    <div style="font-size:2.5rem; font-weight:700; color:var(--accent);">24/7</div>
+                    <p class="text-muted mb-0">Поддержка клиентов</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="background:#fff; border-radius:16px; padding:3rem; box-shadow:var(--card-shadow);">
+        <h3 style="font-family:'Playfair Display',serif; text-align:center; margin-bottom:2.5rem;">Почему выбирают нас?</h3>
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <i class="fas fa-shipping-fast fa-2x mb-3" style="color:var(--accent);"></i>
+                <h6 class="fw-bold">Быстрая доставка</h6>
+                <p class="text-muted small">Доставляем по Бишкеку за 1-2 дня, по Кыргызстану за 3-5 дней.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-certificate fa-2x mb-3" style="color:var(--accent);"></i>
+                <h6 class="fw-bold">Только оригиналы</h6>
+                <p class="text-muted small">Гарантируем подлинность каждой книги в нашем каталоге.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-tags fa-2x mb-3" style="color:var(--accent);"></i>
+                <h6 class="fw-bold">Честные цены</h6>
+                <p class="text-muted small">Конкурентные цены и регулярные акции для наших покупателей.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Оформление заказа — КнигоМир{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <div class="container">
+        <h1 style="font-family:'Playfair Display',serif; font-size:2.2rem;">Оформление заказа</h1>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div style="background:#fff; border-radius:12px; padding:2rem; box-shadow:var(--card-shadow);">
+                <h5 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">
+                    <i class="fas fa-map-marker-alt me-2" style="color:var(--accent);"></i>Данные для доставки
+                </h5>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger small mt-1">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-accent btn-lg w-100 mt-2">
+                        <i class="fas fa-check me-2"></i>Подтвердить заказ
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div style="background:#fff; border-radius:12px; padding:1.5rem; box-shadow:var(--card-shadow);">
+                <h5 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">Ваш заказ</h5>
+                {% for item in cart.items.all %}
+                <div class="d-flex gap-3 mb-3 pb-3 border-bottom">
+                    {% if item.book.cover %}
+                        <img src="{{ item.book.cover.url }}" alt="{{ item.book.title }}" style="width:45px; height:60px; object-fit:cover; border-radius:4px;">
+                    {% else %}
+                        <div style="width:45px; height:60px; background:linear-gradient(135deg,#667eea,#764ba2); border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#fff;">
+                            <i class="fas fa-book" style="font-size:0.8rem;"></i>
+                        </div>
+                    {% endif %}
+                    <div class="flex-grow-1">
+                        <p class="mb-1 fw-semibold" style="font-size:0.9rem; line-height:1.3;">{{ item.book.title }}</p>
+                        <small class="text-muted">{{ item.quantity }} шт. × {{ item.book.price }} сом</small>
+                    </div>
+                    <span class="fw-bold" style="color:var(--accent);">{{ item.get_total_price }} сом</span>
+                </div>
+                {% endfor %}
+                <div class="d-flex justify-content-between mt-3">
+                    <strong style="font-size:1.1rem;">Итого:</strong>
+                    <strong style="font-size:1.4rem; color:var(--accent);">{{ cart.get_total_price }} сом</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

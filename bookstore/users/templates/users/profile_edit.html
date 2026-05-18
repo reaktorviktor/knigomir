@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Редактировать профиль — КнигоМир{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <div class="container">
+        <h1 style="font-family:'Playfair Display',serif; font-size:2.2rem;">Редактировать профиль</h1>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div style="background:#fff; border-radius:12px; padding:2.5rem; box-shadow:var(--card-shadow);">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h5 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem; padding-bottom:0.8rem; border-bottom:2px solid #f0ece4;">
+                        Основная информация
+                    </h5>
+                    {% for field in user_form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors.0 }}</div>{% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <h5 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem; margin-top:2rem; padding-bottom:0.8rem; border-bottom:2px solid #f0ece4;">
+                        Дополнительные данные
+                    </h5>
+                    {% for field in profile_form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors.0 }}</div>{% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="btn btn-accent btn-lg px-4">
+                            <i class="fas fa-save me-2"></i>Сохранить
+                        </button>
+                        <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary btn-lg">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

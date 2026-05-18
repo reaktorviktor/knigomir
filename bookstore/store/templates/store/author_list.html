@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Авторы — КнигоМир{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <div class="container">
+        <h1 style="font-family:'Playfair Display',serif; font-size:2.5rem;">Авторы</h1>
+        <p style="opacity:0.8;">Познакомьтесь с авторами книг нашего магазина</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4">
+        {% for author in authors %}
+        <div class="col-md-4 col-lg-3">
+            <a href="{% url 'store:author_detail' author.pk %}" class="text-decoration-none">
+                <div style="background:#fff; border-radius:12px; padding:1.5rem; text-align:center; box-shadow:var(--card-shadow); transition:transform 0.25s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+                    {% if author.photo %}
+                        <img src="{{ author.photo.url }}" alt="{{ author }}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:0.8rem;">
+                    {% else %}
+                        <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#667eea,#764ba2); display:flex; align-items:center; justify-content:center; color:#fff; font-size:2rem; margin:0 auto 0.8rem;">
+                            {{ author.first_name|first }}{{ author.last_name|first }}
+                        </div>
+                    {% endif %}
+                    <h6 class="fw-semibold text-dark mb-1" style="font-family:'Playfair Display',serif;">{{ author }}</h6>
+                    <small class="text-muted">{{ author.books.count }} книг{{author.books.count|pluralize:"а,и,"}}</small>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <p class="text-muted">Авторов пока нет.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

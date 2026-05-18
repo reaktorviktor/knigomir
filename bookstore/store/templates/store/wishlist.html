@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Избранное — КнигоМир{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <div class="container">
+        <h1 style="font-family:'Playfair Display',serif; font-size:2.2rem;">Избранное</h1>
+    </div>
+</div>
+<div class="container pb-5">
+    {% if wishlist.books.all %}
+    <div class="row g-4">
+        {% for book in wishlist.books.all %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="book-card">
+                <a href="{{ book.get_absolute_url }}" class="text-decoration-none">
+                    <div class="book-cover-wrap">
+                        {% if book.cover %}<img src="{{ book.cover.url }}" alt="{{ book.title }}">
+                        {% else %}<div class="book-cover-placeholder"><i class="fas fa-book"></i></div>{% endif %}
+                    </div>
+                </a>
+                <div class="card-body">
+                    <a href="{{ book.get_absolute_url }}" class="text-decoration-none text-dark">
+                        <p class="book-title">{{ book.title }}</p>
+                    </a>
+                    <p class="book-author">{{ book.author }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="book-price">{{ book.price }} сом</span>
+                        <div class="d-flex gap-1">
+                            <a href="{% url 'store:add_to_cart' book.pk %}" class="btn btn-accent btn-sm"><i class="fas fa-cart-plus"></i></a>
+                            <a href="{% url 'store:toggle_wishlist' book.pk %}" class="btn btn-outline-danger btn-sm"><i class="fas fa-heart-broken"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-heart fa-4x text-muted mb-4"></i>
+        <h3 style="font-family:'Playfair Display',serif;">Список избранного пуст</h3>
+        <p class="text-muted">Добавляйте книги в избранное, нажимая <i class="fas fa-heart text-danger"></i> на странице книги.</p>
+        <a href="{% url 'store:book_list' %}" class="btn btn-accent btn-lg mt-2 px-5">В каталог</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

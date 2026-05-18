@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}{{ author }} — КнигоМир{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="color:rgba(255,255,255,0.7);">
+                <li class="breadcrumb-item"><a href="{% url 'store:index' %}" style="color:rgba(255,255,255,0.7);">Главная</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'store:author_list' %}" style="color:rgba(255,255,255,0.7);">Авторы</a></li>
+                <li class="breadcrumb-item active" style="color:#fff;">{{ author }}</li>
+            </ol>
+        </nav>
+        <div class="d-flex align-items-center gap-4">
+            {% if author.photo %}
+                <img src="{{ author.photo.url }}" alt="{{ author }}" style="width:90px; height:90px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,0.3);">
+            {% else %}
+                <div style="width:90px; height:90px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:#fff; border:3px solid rgba(255,255,255,0.3);">
+                    {{ author.first_name|first }}{{ author.last_name|first }}
+                </div>
+            {% endif %}
+            <div>
+                <h1 style="font-family:'Playfair Display',serif; font-size:2.2rem; margin-bottom:0.3rem;">{{ author }}</h1>
+                <p style="opacity:0.8; margin-bottom:0;">{{ books.count }} книг{{books.count|pluralize:"а,и,"}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    {% if author.bio %}
+    <div style="background:#fff; border-radius:12px; padding:2rem; box-shadow:var(--card-shadow); margin-bottom:2rem;">
+        <h5 style="font-family:'Playfair Display',serif; margin-bottom:1rem;">Биография</h5>
+        <p style="line-height:1.8; color:#555;">{{ author.bio }}</p>
+    </div>
+    {% endif %}
+
+    <h3 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">Книги автора</h3>
+    <div class="row g-4">
+        {% for book in books %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="book-card">
+                <a href="{{ book.get_absolute_url }}" class="text-decoration-none">
+                    <div class="book-cover-wrap">
+                        {% if book.cover %}
+                            <img src="{{ book.cover.url }}" alt="{{ book.title }}">
+                        {% else %}
+                            <div class="book-cover-placeholder"><i class="fas fa-book"></i></div>
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="card-body">
+                    <a href="{{ book.get_absolute_url }}" class="text-decoration-none text-dark">
+                        <p class="book-title">{{ book.title }}</p>
+                    </a>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="book-price">{{ book.price }} сом</span>
+                        <a href="{% url 'store:add_to_cart' book.pk %}" class="btn btn-accent btn-sm"><i class="fas fa-cart-plus"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

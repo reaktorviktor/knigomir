@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Мои заказы — КнигоМир{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <div class="container">
+        <h1 style="font-family:'Playfair Display',serif; font-size:2.2rem;">Мои заказы</h1>
+    </div>
+</div>
+
+<div class="container pb-5">
+    {% if orders %}
+    <div style="background:#fff; border-radius:12px; box-shadow:var(--card-shadow); overflow:hidden;">
+        <table class="table table-hover mb-0">
+            <thead style="background:#f8f6f2;">
+                <tr>
+                    <th>№ заказа</th>
+                    <th>Дата</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td class="fw-semibold">#{{ order.pk }}</td>
+                    <td class="text-muted">{{ order.created|date:"d.m.Y" }}</td>
+                    <td style="color:var(--accent); font-weight:600;">{{ order.total_price }} сом</td>
+                    <td>
+                        {% if order.status == 'pending' %}<span class="badge bg-warning text-dark">Ожидает</span>
+                        {% elif order.status == 'processing' %}<span class="badge bg-info">Обрабатывается</span>
+                        {% elif order.status == 'shipped' %}<span class="badge bg-primary">Отправлен</span>
+                        {% elif order.status == 'delivered' %}<span class="badge bg-success">Доставлен</span>
+                        {% elif order.status == 'cancelled' %}<span class="badge bg-danger">Отменён</span>
+                        {% endif %}
+                    </td>
+                    <td><a href="{{ order.get_absolute_url }}" class="btn btn-sm btn-outline-primary">Подробнее</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
+        <h3 style="font-family:'Playfair Display',serif;">У вас пока нет заказов</h3>
+        <a href="{% url 'store:book_list' %}" class="btn btn-accent btn-lg mt-3 px-5">Перейти в каталог</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

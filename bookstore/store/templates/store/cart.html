@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Корзина — КнигоМир{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <div class="container">
+        <h1 style="font-family:'Playfair Display',serif; font-size:2.2rem;">Корзина</h1>
+    </div>
+</div>
+
+<div class="container pb-5">
+    {% if cart.items.all %}
+    <div class="row g-4">
+        <div class="col-lg-8">
+            {% for item in cart.items.all %}
+            <div style="background:#fff; border-radius:12px; padding:1.5rem; margin-bottom:1rem; box-shadow:var(--card-shadow);">
+                <div class="row align-items-center">
+                    <div class="col-2 col-md-1">
+                        {% if item.book.cover %}
+                            <img src="{{ item.book.cover.url }}" alt="{{ item.book.title }}" class="img-fluid rounded">
+                        {% else %}
+                            <div style="width:50px; height:65px; background:linear-gradient(135deg,#667eea,#764ba2); border-radius:6px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.2rem;">
+                                <i class="fas fa-book"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-6 col-md-6">
+                        <a href="{{ item.book.get_absolute_url }}" class="text-decoration-none">
+                            <h6 class="mb-1 fw-semibold">{{ item.book.title }}</h6>
+                        </a>
+                        <small class="text-muted">{{ item.book.author }}</small>
+                        <p class="mb-0 mt-1" style="color:var(--accent); font-weight:600;">{{ item.book.price }} сом</p>
+                    </div>
+                    <div class="col-2 col-md-3">
+                        <form method="post" action="{% url 'store:update_cart' item.pk %}" class="d-flex align-items-center gap-2">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="{{ item.book.stock }}" class="form-control form-control-sm" style="width:65px;" onchange="this.form.submit()">
+                        </form>
+                    </div>
+                    <div class="col-2 col-md-2 text-end">
+                        <p class="fw-bold mb-2">{{ item.get_total_price }} сом</p>
+                        <a href="{% url 'store:remove_from_cart' item.pk %}" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-lg-4">
+            <div style="background:#fff; border-radius:12px; padding:1.5rem; box-shadow:var(--card-shadow); position:sticky; top:80px;">
+                <h5 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">Итого</h5>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Товаров:</span>
+                    <span>{{ cart.get_total_items }} шт.</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-3">
+                    <strong style="font-size:1.1rem;">Сумма:</strong>
+                    <strong style="font-size:1.3rem; color:var(--accent);">{{ cart.get_total_price }} сом</strong>
+                </div>
+                <a href="{% url 'store:checkout' %}" class="btn btn-accent w-100 btn-lg">
+                    <i class="fas fa-credit-card me-2"></i>Оформить заказ
+                </a>
+                <a href="{% url 'store:book_list' %}" class="btn btn-outline-secondary w-100 mt-2">
+                    <i class="fas fa-arrow-left me-2"></i>Продолжить покупки
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-shopping-cart fa-4x text-muted mb-4"></i>
+        <h3 style="font-family:'Playfair Display',serif;">Ваша корзина пуста</h3>
+        <p class="text-muted mb-4">Добавьте книги из каталога, чтобы оформить заказ.</p>
+        <a href="{% url 'store:book_list' %}" class="btn btn-accent btn-lg px-5">
+            <i class="fas fa-book-open me-2"></i>Перейти в каталог
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}КнигоМир — Книжный интернет-магазин{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e67e22;
+            --light-bg: #f8f6f2;
+            --card-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: #333;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Навигация */
+        .navbar {
+            background-color: var(--primary) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            padding: 12px 0;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff !important;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-brand span {
+            color: var(--accent);
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.85) !important;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--accent) !important;
+        }
+
+        .cart-badge {
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            margin-left: 4px;
+        }
+
+        /* Карточки книг */
+        .book-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: transform 0.25s, box-shadow 0.25s;
+            height: 100%;
+        }
+
+        .book-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.13);
+        }
+
+        .book-cover-wrap {
+            position: relative;
+            overflow: hidden;
+            height: 240px;
+            background: #eee;
+        }
+
+        .book-cover-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .book-card:hover .book-cover-wrap img {
+            transform: scale(1.04);
+        }
+
+        .book-cover-placeholder {
+            width: 100%;
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 3rem;
+        }
+
+        .book-card .card-body {
+            padding: 1rem;
+        }
+
+        .book-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .book-author {
+            font-size: 0.82rem;
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .book-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Кнопки */
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #1a252f;
+            border-color: #1a252f;
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .btn-accent:hover {
+            background-color: #d35400;
+            color: #fff;
+        }
+
+        /* Секции */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .section-subtitle {
+            color: #888;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .section-divider {
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+            margin-bottom: 1rem;
+            border-radius: 2px;
+        }
+
+        /* Рейтинг */
+        .stars {
+            color: #f39c12;
+            font-size: 0.85rem;
+        }
+
+        /* Футер */
+        footer {
+            background: var(--primary);
+            color: rgba(255,255,255,0.8);
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--accent);
+        }
+
+        footer h6 {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 30px;
+            font-size: 0.85rem;
+        }
+
+        /* Алерты */
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        /* Категории */
+        .category-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: #fff;
+            border: 1.5px solid #ddd;
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.2s;
+            margin: 3px;
+        }
+
+        .category-badge:hover, .category-badge.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* Хлебные крошки */
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+
+        .page-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #34495e 100%);
+            color: white;
+            padding: 50px 0 40px;
+            margin-bottom: 40px;
+        }
+
+        /* Поиск в навбаре */
+        .navbar-search {
+            position: relative;
+        }
+
+        .navbar-search input {
+            border-radius: 20px;
+            padding-left: 15px;
+            padding-right: 40px;
+            border: none;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            width: 220px;
+        }
+
+        .navbar-search input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .navbar-search input:focus {
+            background: rgba(255,255,255,0.25);
+            outline: none;
+            box-shadow: none;
+            color: #fff;
+        }
+
+        .navbar-search button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- Навигационная панель -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'store:index' %}">Книго<span>Мир</span></a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'store:index' %}">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'store:book_list' %}">Каталог</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'store:author_list' %}">Авторы</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'store:about' %}">О нас</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'store:contacts' %}">Контакты</a>
+                </li>
+            </ul>
+
+            <form class="navbar-search me-3" action="{% url 'store:search' %}" method="get">
+                <input type="text" name="q" placeholder="Поиск книг...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'store:wishlist' %}">
+                            <i class="fas fa-heart"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'store:cart_detail' %}">
+                            <i class="fas fa-shopping-cart"></i>
+                            {% if cart_count > 0 %}
+                                <span class="cart-badge">{{ cart_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> {{ user.first_name|default:user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'users:profile' %}"><i class="fas fa-user me-2"></i>Профиль</a></li>
+                            <li><a class="dropdown-item" href="{% url 'store:order_list' %}"><i class="fas fa-box me-2"></i>Мои заказы</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'users:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Выйти</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:login' %}"><i class="fas fa-sign-in-alt me-1"></i>Войти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-accent btn-sm ms-2 px-3" href="{% url 'users:register' %}">Регистрация</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Сообщения -->
+<div class="container mt-3">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Основной контент -->
+{% block content %}{% endblock %}
+
+<!-- Подвал -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5 class="navbar-brand p-0 mb-3" style="font-family:'Playfair Display',serif; font-size:1.4rem;">
+                    Книго<span style="color:var(--accent)">Мир</span>
+                </h5>
+                <p style="font-size:0.9rem;">Ваш надёжный книжный интернет-магазин. Тысячи книг для всех возрастов и вкусов.</p>
+                <div class="d-flex gap-3 mt-3">
+                    <a href="#"><i class="fab fa-vk fa-lg"></i></a>
+                    <a href="#"><i class="fab fa-telegram fa-lg"></i></a>
+                    <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="col-md-2 mb-4">
+                <h6>Каталог</h6>
+                <ul class="list-unstyled" style="font-size:0.9rem;">
+                    <li><a href="{% url 'store:book_list' %}">Все книги</a></li>
+                    <li><a href="{% url 'store:author_list' %}">Авторы</a></li>
+                    <li><a href="{% url 'store:search' %}">Поиск</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2 mb-4">
+                <h6>Информация</h6>
+                <ul class="list-unstyled" style="font-size:0.9rem;">
+                    <li><a href="{% url 'store:about' %}">О нас</a></li>
+                    <li><a href="{% url 'store:contacts' %}">Контакты</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h6>Контакты</h6>
+                <ul class="list-unstyled" style="font-size:0.9rem;">
+                    <li class="mb-2"><i class="fas fa-map-marker-alt me-2" style="color:var(--accent)"></i>г. Бишкек, ул. Чуй, 123</li>
+                    <li class="mb-2"><i class="fas fa-phone me-2" style="color:var(--accent)"></i>+996 312 000 000</li>
+                    <li><i class="fas fa-envelope me-2" style="color:var(--accent)"></i>info@knigomir.kg</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p class="mb-0">&copy; 2024 КнигоМир. Все права защищены.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Заказ #{{ order.pk }} — КнигоМир{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="color:rgba(255,255,255,0.7);">
+                <li class="breadcrumb-item"><a href="{% url 'store:index' %}" style="color:rgba(255,255,255,0.7);">Главная</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'store:order_list' %}" style="color:rgba(255,255,255,0.7);">Мои заказы</a></li>
+                <li class="breadcrumb-item active" style="color:#fff;">Заказ #{{ order.pk }}</li>
+            </ol>
+        </nav>
+        <h1 style="font-family:'Playfair Display',serif; font-size:2.2rem;">Заказ #{{ order.pk }}</h1>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div style="background:#fff; border-radius:12px; padding:2rem; box-shadow:var(--card-shadow);">
+                <h5 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">Состав заказа</h5>
+                {% for item in order.items.all %}
+                <div class="d-flex gap-3 mb-3 pb-3 border-bottom align-items-center">
+                    {% if item.book.cover %}
+                        <img src="{{ item.book.cover.url }}" alt="{{ item.book.title }}" style="width:50px; height:65px; object-fit:cover; border-radius:6px;">
+                    {% else %}
+                        <div style="width:50px; height:65px; background:linear-gradient(135deg,#667eea,#764ba2); border-radius:6px; display:flex; align-items:center; justify-content:center; color:#fff;">
+                            <i class="fas fa-book"></i>
+                        </div>
+                    {% endif %}
+                    <div class="flex-grow-1">
+                        <a href="{{ item.book.get_absolute_url }}" class="fw-semibold text-decoration-none text-dark">{{ item.book.title }}</a>
+                        <p class="text-muted mb-0 small">{{ item.book.author }}</p>
+                        <small class="text-muted">{{ item.quantity }} шт. × {{ item.price }} сом</small>
+                    </div>
+                    <strong style="color:var(--accent);">{{ item.get_total_price }} сом</strong>
+                </div>
+                {% endfor %}
+                <div class="d-flex justify-content-between mt-3">
+                    <strong>Итого:</strong>
+                    <strong style="font-size:1.3rem; color:var(--accent);">{{ order.total_price }} сом</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div style="background:#fff; border-radius:12px; padding:1.5rem; box-shadow:var(--card-shadow); margin-bottom:1rem;">
+                <h6 class="fw-bold text-uppercase mb-3" style="font-size:0.8rem; letter-spacing:1px; color:#888;">Статус заказа</h6>
+                {% if order.status == 'pending' %}
+                    <span class="badge bg-warning text-dark fs-6">⏳ Ожидает обработки</span>
+                {% elif order.status == 'processing' %}
+                    <span class="badge bg-info fs-6">🔄 Обрабатывается</span>
+                {% elif order.status == 'shipped' %}
+                    <span class="badge bg-primary fs-6">🚚 Отправлен</span>
+                {% elif order.status == 'delivered' %}
+                    <span class="badge bg-success fs-6">✅ Доставлен</span>
+                {% elif order.status == 'cancelled' %}
+                    <span class="badge bg-danger fs-6">❌ Отменён</span>
+                {% endif %}
+                <p class="text-muted small mt-2 mb-0">Дата заказа: {{ order.created|date:"d.m.Y H:i" }}</p>
+            </div>
+
+            <div style="background:#fff; border-radius:12px; padding:1.5rem; box-shadow:var(--card-shadow);">
+                <h6 class="fw-bold text-uppercase mb-3" style="font-size:0.8rem; letter-spacing:1px; color:#888;">Данные доставки</h6>
+                <p class="mb-1"><i class="fas fa-user me-2 text-muted"></i>{{ order.full_name }}</p>
+                <p class="mb-1"><i class="fas fa-envelope me-2 text-muted"></i>{{ order.email }}</p>
+                <p class="mb-1"><i class="fas fa-phone me-2 text-muted"></i>{{ order.phone }}</p>
+                <p class="mb-0"><i class="fas fa-map-marker-alt me-2 text-muted"></i>{{ order.address }}</p>
+                {% if order.comment %}
+                    <hr>
+                    <p class="mb-0 small text-muted"><i class="fas fa-comment me-2"></i>{{ order.comment }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

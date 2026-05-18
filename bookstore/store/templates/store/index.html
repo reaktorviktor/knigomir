@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}КнигоМир — Главная{% endblock %}
+
+{% block content %}
+
+<!-- Герой-баннер -->
+<section style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 60%, #2c3e50 100%); color: white; padding: 80px 0;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 style="font-family:'Playfair Display',serif; font-size:3rem; font-weight:700; line-height:1.2; margin-bottom:1.5rem;">
+                    Мир знаний<br>начинается здесь
+                </h1>
+                <p style="font-size:1.1rem; opacity:0.85; margin-bottom:2rem; line-height:1.7;">
+                    Тысячи книг на любой вкус — от классики до современных бестселлеров.
+                    Быстрая доставка по всему Кыргызстану.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{% url 'store:book_list' %}" class="btn btn-accent btn-lg px-4">
+                        <i class="fas fa-book-open me-2"></i>Перейти в каталог
+                    </a>
+                    <a href="{% url 'store:search' %}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-search me-2"></i>Найти книгу
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-flex justify-content-end">
+                <div style="font-size:12rem; opacity:0.1; line-height:1;">📚</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Преимущества -->
+<section style="background:#fff; padding:40px 0; border-bottom:1px solid #eee;">
+    <div class="container">
+        <div class="row text-center g-3">
+            <div class="col-6 col-md-3">
+                <i class="fas fa-shipping-fast fa-2x mb-2" style="color:var(--accent)"></i>
+                <p class="mb-0 fw-semibold" style="font-size:0.9rem;">Быстрая доставка</p>
+                <small class="text-muted">по всему КГ</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <i class="fas fa-shield-alt fa-2x mb-2" style="color:var(--accent)"></i>
+                <p class="mb-0 fw-semibold" style="font-size:0.9rem;">Гарантия качества</p>
+                <small class="text-muted">оригинальные книги</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <i class="fas fa-undo fa-2x mb-2" style="color:var(--accent)"></i>
+                <p class="mb-0 fw-semibold" style="font-size:0.9rem;">Возврат 14 дней</p>
+                <small class="text-muted">без вопросов</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <i class="fas fa-headset fa-2x mb-2" style="color:var(--accent)"></i>
+                <p class="mb-0 fw-semibold" style="font-size:0.9rem;">Поддержка 24/7</p>
+                <small class="text-muted">всегда на связи</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Категории -->
+{% if categories %}
+<section class="container py-5">
+    <div class="mb-4">
+        <h2 class="section-title">Категории</h2>
+        <div class="section-divider"></div>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        {% for cat in categories %}
+            <a href="{{ cat.get_absolute_url }}" class="category-badge">
+                {{ cat.name }}
+            </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Рекомендуемые книги -->
+{% if featured_books %}
+<section class="container pb-5">
+    <div class="mb-4">
+        <h2 class="section-title">Рекомендуем</h2>
+        <div class="section-divider"></div>
+        <p class="section-subtitle">Лучшие книги нашего магазина</p>
+    </div>
+    <div class="row g-4">
+        {% for book in featured_books %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="book-card">
+                <a href="{{ book.get_absolute_url }}" class="text-decoration-none">
+                    <div class="book-cover-wrap">
+                        {% if book.cover %}
+                            <img src="{{ book.cover.url }}" alt="{{ book.title }}">
+                        {% else %}
+                            <div class="book-cover-placeholder">
+                                <i class="fas fa-book"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="card-body">
+                    <a href="{{ book.get_absolute_url }}" class="text-decoration-none text-dark">
+                        <p class="book-title">{{ book.title }}</p>
+                    </a>
+                    <p class="book-author">{{ book.author }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="book-price">{{ book.price }} сом</span>
+                        <a href="{% url 'store:add_to_cart' book.pk %}" class="btn btn-accent btn-sm">
+                            <i class="fas fa-cart-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Новинки -->
+{% if new_books %}
+<section style="background:#fff; padding:50px 0;">
+    <div class="container">
+        <div class="mb-4">
+            <h2 class="section-title">Новинки</h2>
+            <div class="section-divider"></div>
+            <p class="section-subtitle">Свежие поступления в нашем каталоге</p>
+        </div>
+        <div class="row g-4">
+            {% for book in new_books %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="book-card">
+                    <a href="{{ book.get_absolute_url }}" class="text-decoration-none">
+                        <div class="book-cover-wrap">
+                            {% if book.cover %}
+                                <img src="{{ book.cover.url }}" alt="{{ book.title }}">
+                            {% else %}
+                                <div class="book-cover-placeholder" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="card-body">
+                        <a href="{{ book.get_absolute_url }}" class="text-decoration-none text-dark">
+                            <p class="book-title">{{ book.title }}</p>
+                        </a>
+                        <p class="book-author">{{ book.author }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="book-price">{{ book.price }} сом</span>
+                            <a href="{% url 'store:add_to_cart' book.pk %}" class="btn btn-accent btn-sm">
+                                <i class="fas fa-cart-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'store:book_list' %}" class="btn btn-primary btn-lg px-5">
+                Смотреть весь каталог <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Баннер регистрации -->
+{% if not user.is_authenticated %}
+<section style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); padding:60px 0; color:white; text-align:center;">
+    <div class="container">
+        <h2 style="font-family:'Playfair Display',serif; font-size:2.2rem; margin-bottom:1rem;">
+            Присоединяйтесь к КнигоМир!
+        </h2>
+        <p style="font-size:1.05rem; opacity:0.9; margin-bottom:2rem;">
+            Зарегистрируйтесь, чтобы отслеживать заказы, сохранять избранное и получать персональные рекомендации.
+        </p>
+        <a href="{% url 'users:register' %}" class="btn btn-light btn-lg px-5 text-dark fw-semibold">
+            Создать аккаунт бесплатно
+        </a>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}
