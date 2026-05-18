@@ -5,6 +5,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-bookstore-secret-key-change-in-production-2024'
 
+CSRF_TRUSTED_ORIGINS = ['https://knigomir-production.up.railway.app']
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
